@@ -2,6 +2,7 @@ package com.e.androidpuzzlegame;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -15,11 +16,21 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -30,10 +41,19 @@ import java.util.Random;
 
 import static java.lang.Math.abs;
 
+
+
 public class PuzzleActivity extends AppCompatActivity {
+
     ArrayList<PuzzlePiece> pieces;
     String mCurrentPhotoPath;
     String mCurrentPhotoUri;
+    private static final String TAG = "PuzzleActivity";
+    Button button;
+
+    /*private SensorManager sensorManager;
+    Sensor accelerometer;
+    private float x,y,z;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +62,26 @@ public class PuzzleActivity extends AppCompatActivity {
 
         final RelativeLayout layout = findViewById(R.id.layout);
         final ImageView imageView = findViewById(R.id.imageView);
+        button = findViewById(R.id.resetButton);
 
         Intent intent = getIntent();
         final String assetName = intent.getStringExtra("assetName");
         mCurrentPhotoPath = intent.getStringExtra("mCurrentPhotoPath");
         mCurrentPhotoUri = intent.getStringExtra("mCurrentPhotoUri");
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        /*Log.d(TAG, "onCreate: Initializing Sensor Services");
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(PuzzleActivity.this,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+        Log.d(TAG, "onCreate: Register accelerometer listener");*/
 
         // run image related code after the view was laid out
         // to have all dimensions calculated
@@ -71,6 +106,7 @@ public class PuzzleActivity extends AppCompatActivity {
                     RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) piece.getLayoutParams();
                     lParams.leftMargin = new Random().nextInt(layout.getWidth() - piece.pieceWidth);
                     lParams.topMargin = layout.getHeight() - piece.pieceHeight;
+                    // lParams.rightMargin = piece.pieceWidth - layout.getWidth();
                     piece.setLayoutParams(lParams);
                 }
             }
@@ -111,9 +147,9 @@ public class PuzzleActivity extends AppCompatActivity {
     }
 
     private ArrayList<PuzzlePiece> splitImage() {
-        int piecesNumber = 12;
+        int piecesNumber = 16;
         int rows = 4;
-        int cols = 3;
+        int cols = 4;
 
         ImageView imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
@@ -351,5 +387,18 @@ public class PuzzleActivity extends AppCompatActivity {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
     }
+    /*@Override
+    public void onAccuracyChanged(Sensor sensor, int i){
 
+    }
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent){
+        x = sensorEvent.values[0];
+        y = sensorEvent.values[1];
+        z = sensorEvent.values[2];
+        Log.d(TAG, "onSensorChanged: X: " + sensorEvent.values[0] + "Y: " + sensorEvent.values[1] + "Z: " + sensorEvent.values[2]);
+    }*/
+    public void onResetButtonClicked(View view) {
+
+    }
 }

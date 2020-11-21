@@ -1,8 +1,12 @@
 package com.e.androidpuzzlegame;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import static java.lang.Math.abs;
@@ -34,11 +38,14 @@ public class TouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_DOWN:
                 xDelta = x - lParams.leftMargin;
                 yDelta = y - lParams.topMargin;
+
                 piece.bringToFront();
                 break;
             case MotionEvent.ACTION_MOVE:
                 lParams.leftMargin = (int) (x - xDelta);
                 lParams.topMargin = (int) (y - yDelta);
+                lParams.rightMargin = -250;
+                lParams.bottomMargin = -250;
                 view.setLayoutParams(lParams);
                 break;
             case MotionEvent.ACTION_UP:
@@ -47,6 +54,8 @@ public class TouchListener implements View.OnTouchListener {
                 if (xDiff <= tolerance && yDiff <= tolerance) {
                     lParams.leftMargin = piece.xCoord;
                     lParams.topMargin = piece.yCoord;
+                    lParams.rightMargin = -250;
+                    lParams.bottomMargin = -250;
                     piece.setLayoutParams(lParams);
                     piece.canMove = false;
                     sendViewToBack(piece);
@@ -65,4 +74,5 @@ public class TouchListener implements View.OnTouchListener {
             parent.addView(child, 0);
         }
     }
+
 }

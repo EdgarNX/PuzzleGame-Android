@@ -11,7 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidPuzzleGame">
-        <activity android:name=".PuzzleActivity"></activity>
+        <activity android:name=".SelectActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".PuzzleActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -21,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -28,7 +37,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
