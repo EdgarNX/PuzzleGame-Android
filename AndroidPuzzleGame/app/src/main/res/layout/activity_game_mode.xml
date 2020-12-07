@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <Button
+            android:id="@+id/local"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_console"
+            android:text="@string/local_button_text"
+            android:textColor="@android:color/black"
+            android:textSize="14dp"
+            app:backgroundTint="#00EFD1" />
+
+        <Button
+            android:id="@+id/online"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_multiplayer"
+            android:text="@string/online_button_text"
+            android:textColor="@android:color/black"
+            android:textSize="14dp"
+            app:backgroundTint="#00EFD1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_below="@id/linear1"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:text="@string/how_to_play_button_text"
+            android:textColor="@android:color/black"
+            android:textSize="14dp"
+            app:backgroundTint="#C0C0C0" />
+
+    </LinearLayout>
+</RelativeLayout>
