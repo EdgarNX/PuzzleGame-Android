@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:paddingVertical="32dp"
+            android:rotation="50"
+            android:src="@drawable/puzzle_logo" />
+
+        <TextView
+            android:id="@+id/textSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingBottom="8dp"
+            android:text="Sign In"
+            android:textColor="#002E63"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="64dp"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:id="@+id/user_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_user" />
+
+            <EditText
+                android:id="@+id/username_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/user_image"
+                android:hint="USERNAME"
+                android:inputType="textPersonName"
+                android:lines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/nickname_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="64dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dog_tag" />
+
+            <EditText
+                android:id="@+id/nickname_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/name"
+                android:hint="NICKNAME"
+                android:inputType="textPersonName"
+                android:lines="1" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="64dp"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:id="@+id/lock_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_lock" />
+
+            <EditText
+                android:id="@+id/password_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/lock_image"
+                android:hint="PASSWORD"
+                android:inputType="textPassword"
+                android:lines="1" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/confirm_passwod_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="64dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/lock_image_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_lock" />
+
+            <EditText
+                android:id="@+id/confirm_password_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/lock_image_confirm"
+                android:hint="CONFIRM PASSWORD"
+                android:inputType="textPassword"
+                android:lines="1" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/buttonSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#00EFD1"
+            android:text="Sign In"
+            android:textColor="@color/white" />
+
+        <Switch
+            android:id="@+id/switchSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="64dp"
+            android:checked="true"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="Sign Up"
+            android:textColor="#696969"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
+
+</ScrollView>
