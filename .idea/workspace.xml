@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8378109b-3034-4603-81a6-8118e5474620" name="Default Changelist" comment="" />
+    <list default="true" id="8378109b-3034-4603-81a6-8118e5474620" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/java/com/e/androidpuzzlegame/AfterSingIn.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/java/com/e/androidpuzzlegame/StarterApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/res/drawable/ic_puzzle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/res/drawable/rounded_button.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/res/layout/after_sign_in.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidPuzzleGame/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidPuzzleGame/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidPuzzleGame/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/java/com/e/androidpuzzlegame/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/java/com/e/androidpuzzlegame/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/res/layout/sign_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidPuzzleGame/app/src/main/res/layout/sign_layout.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,9 +51,9 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1607335396871">
+    <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1607965332394">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834/-1280.0.1280.994@0.0.1536.834" timestamp="1607335396871" />
+    <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834/-1280.0.1280.994@0.0.1536.834" timestamp="1607965332394" />
   </component>
 </project>
