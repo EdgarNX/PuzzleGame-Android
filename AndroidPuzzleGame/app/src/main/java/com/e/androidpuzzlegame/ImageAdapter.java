@@ -1,5 +1,6 @@
 package com.e.androidpuzzlegame;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
+    private final Context mContext;
     private AssetManager am;
     private String[] files;
 
@@ -24,7 +25,7 @@ public class ImageAdapter extends BaseAdapter {
         mContext = c;
         am = mContext.getAssets();
         try {
-            files  = am.list("img");
+            files = am.list("img");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,6 +44,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     // create a new ImageView for each item referenced by the Adapter
+    @SuppressLint("InflateParams")
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
@@ -53,10 +55,12 @@ public class ImageAdapter extends BaseAdapter {
         imageView.setImageBitmap(null);
         // run image related code after the view was laid out
         imageView.post(new Runnable() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void run() {
                 new AsyncTask<Void, Void, Void>() {
                     private Bitmap bitmap;
+
                     @Override
                     protected Void doInBackground(Void... voids) {
                         bitmap = getPicFromAsset(imageView, files[position]);
@@ -80,7 +84,7 @@ public class ImageAdapter extends BaseAdapter {
         int targetW = imageView.getWidth();
         int targetH = imageView.getHeight();
 
-        if(targetW == 0 || targetH == 0) {
+        if (targetW == 0 || targetH == 0) {
             // view has no dimensions set
             return null;
         }
@@ -95,7 +99,7 @@ public class ImageAdapter extends BaseAdapter {
             int photoH = bmOptions.outHeight;
 
             // Determine how much to scale down the image
-            int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+            int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
             is.reset();
 

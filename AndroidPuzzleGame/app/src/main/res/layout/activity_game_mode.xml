@@ -14,7 +14,7 @@
         android:paddingHorizontal="16dp">
 
         <Button
-            android:id="@+id/local"
+            android:id="@+id/single_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"

@@ -1,9 +1,17 @@
 package com.e.androidpuzzlegame;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,8 +31,12 @@ import android.hardware.SensorManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -33,6 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,19 +55,18 @@ import java.util.Random;
 import static java.lang.Math.abs;
 
 
-
-public class PuzzleActivity extends AppCompatActivity {
+public class PuzzleActivity extends AppCompatActivity implements FireMissilesDialogFragment.NoticeDialogListener {
 
     ArrayList<PuzzlePiece> pieces;
     String mCurrentPhotoPath;
     String mCurrentPhotoUri;
     private static final String TAG = "PuzzleActivity";
-    Button button;
 
     /*private SensorManager sensorManager;
     Sensor accelerometer;
     private float x,y,z;*/
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,20 +74,11 @@ public class PuzzleActivity extends AppCompatActivity {
 
         final RelativeLayout layout = findViewById(R.id.layout);
         final ImageView imageView = findViewById(R.id.imageView);
-        button = findViewById(R.id.resetButton);
 
         Intent intent = getIntent();
         final String assetName = intent.getStringExtra("assetName");
         mCurrentPhotoPath = intent.getStringExtra("mCurrentPhotoPath");
         mCurrentPhotoUri = intent.getStringExtra("mCurrentPhotoUri");
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }
-        });
 
         /*Log.d(TAG, "onCreate: Initializing Sensor Services");
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -85,30 +88,27 @@ public class PuzzleActivity extends AppCompatActivity {
 
         // run image related code after the view was laid out
         // to have all dimensions calculated
-        imageView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (assetName != null) {
-                    setPicFromAsset(assetName, imageView);
-                } else if (mCurrentPhotoPath != null) {
-                    setPicFromPath(mCurrentPhotoPath, imageView);
-                } else if (mCurrentPhotoUri != null) {
-                    imageView.setImageURI(Uri.parse(mCurrentPhotoUri));
-                }
-                pieces = splitImage();
-                TouchListener touchListener = new TouchListener(PuzzleActivity.this);
-                // shuffle pieces order
-                Collections.shuffle(pieces);
-                for (PuzzlePiece piece : pieces) {
-                    piece.setOnTouchListener(touchListener);
-                    layout.addView(piece);
-                    // randomize position, on the bottom of the screen
-                    RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) piece.getLayoutParams();
-                    lParams.leftMargin = new Random().nextInt(layout.getWidth() - piece.pieceWidth);
-                    lParams.topMargin = layout.getHeight() - piece.pieceHeight;
-                    // lParams.rightMargin = piece.pieceWidth - layout.getWidth();
-                    piece.setLayoutParams(lParams);
-                }
+        imageView.post(() -> {
+            if (assetName != null) {
+                setPicFromAsset(assetName, imageView);
+            } else if (mCurrentPhotoPath != null) {
+                setPicFromPath(mCurrentPhotoPath, imageView);
+            } else if (mCurrentPhotoUri != null) {
+                imageView.setImageURI(Uri.parse(mCurrentPhotoUri));
+            }
+            pieces = splitImage();
+            TouchListener touchListener = new TouchListener(PuzzleActivity.this);
+            // shuffle pieces order
+            Collections.shuffle(pieces);
+            for (PuzzlePiece piece : pieces) {
+                piece.setOnTouchListener(touchListener);
+                layout.addView(piece);
+                // randomize position, on the bottom of the screen
+                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) piece.getLayoutParams();
+                lParams.leftMargin = new Random().nextInt(layout.getWidth() - piece.pieceWidth);
+                lParams.topMargin = layout.getHeight() - piece.pieceHeight;
+                // lParams.rightMargin = piece.pieceWidth - layout.getWidth();
+                piece.setLayoutParams(lParams);
             }
         });
     }
@@ -181,10 +181,10 @@ public class PuzzleActivity extends AppCompatActivity {
             for (int col = 0; col < cols; col++) {
                 // calculate offset for each piece
                 int offsetX = 0;
-                int offsetY = 0;
                 if (col > 0) {
                     offsetX = pieceWidth / 3;
                 }
+                int offsetY = 0;
                 if (row > 0) {
                     offsetY = pieceHeight / 3;
                 }
@@ -313,8 +313,8 @@ public class PuzzleActivity extends AppCompatActivity {
         int imgViewW = imageView.getWidth();
         int imgViewH = imageView.getHeight();
 
-        int top = (int) (imgViewH - actH) / 2;
-        int left = (int) (imgViewW - actW) / 2;
+        int top = (imgViewH - actH) / 2;
+        int left = (imgViewW - actW) / 2;
 
         ret[0] = left;
         ret[1] = top;
@@ -337,6 +337,7 @@ public class PuzzleActivity extends AppCompatActivity {
 
         return true;
     }
+
     private void setPicFromPath(String mCurrentPhotoPath, ImageView imageView) {
         // Get the dimensions of the View
         int targetW = imageView.getWidth();
@@ -350,7 +351,7 @@ public class PuzzleActivity extends AppCompatActivity {
         int photoH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
@@ -381,24 +382,50 @@ public class PuzzleActivity extends AppCompatActivity {
 
         imageView.setImageBitmap(rotatedBitmap);
     }
+
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
     }
-    /*@Override
-    public void onAccuracyChanged(Sensor sensor, int i){
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+
+        inflater.inflate(R.menu.reset_settings_menu, menu);
+
+        return true;
 
     }
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent){
-        x = sensorEvent.values[0];
-        y = sensorEvent.values[1];
-        z = sensorEvent.values[2];
-        Log.d(TAG, "onSensorChanged: X: " + sensorEvent.values[0] + "Y: " + sensorEvent.values[1] + "Z: " + sensorEvent.values[2]);
-    }*/
-    public void onResetButtonClicked(View view) {
 
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.reset:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FireMissilesDialogFragment fireMissilesDialogFragment = new FireMissilesDialogFragment(this);
+                fireMissilesDialogFragment.show(fragmentManager, "dialog");
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        dialog.dismiss();
     }
 }
