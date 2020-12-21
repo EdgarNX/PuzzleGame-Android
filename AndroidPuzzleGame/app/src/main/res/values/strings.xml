@@ -1,7 +1,16 @@
 <resources>
+    <string name="app_name">PuzzleGame</string>
+    <string name="local_button_text">SINGLE PLAYER</string>
+    <string name="online_button_text">ONLINE</string>
+    <string name="how_to_play_button_text">HOW TO PLAY</string>
+    <string name="cancel">Cancel</string>
+    <string name="fire">Restart</string>
+    <string name="dialog_fire_missiles">Are you sure want to restart the game?</string>
+    <string name="background_music">Music</string>
+    <string name="logout_text">Logout</string>
+    <string name="change_nickname_text">Change nickname</string>
     <string name="app_name">AndroidPuzzleGame</string>
     <string name="login">Sign In</string>
     <string name="signup">Sign Up</string>
     <string name="error_missing_message">Missing username or nickname.</string>
-
 </resources>

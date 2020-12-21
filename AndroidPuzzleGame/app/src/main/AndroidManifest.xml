@@ -29,17 +29,29 @@
         android:icon="@drawable/ic_puzzle"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AndroidPuzzleGame"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+        <service android:name=".SoundService"  android:enabled="true"/>
+
 
         <activity
-            android:name=".SelectActivity"
+            android:name=".OnlineActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".SelectActivity"
+            android:screenOrientation="portrait"
+            android:label="Choose a photo"/>
         <activity
             android:name=".PuzzleActivity"
             android:screenOrientation="portrait" />
-        
+        <activity
+            android:name=".GameModeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
+            android:label="Settings" />
+  
         <activity android:name=".AfterSignInActivity"></activity>
 
         <activity

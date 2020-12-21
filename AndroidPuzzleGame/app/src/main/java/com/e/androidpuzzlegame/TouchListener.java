@@ -1,12 +1,9 @@
 package com.e.androidpuzzlegame;
 
-import android.content.Context;
-import android.util.DisplayMetrics;
-import android.util.Log;
+import android.annotation.SuppressLint;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import static java.lang.Math.abs;
@@ -16,12 +13,13 @@ import static java.lang.Math.sqrt;
 public class TouchListener implements View.OnTouchListener {
     private float xDelta;
     private float yDelta;
-    private PuzzleActivity activity;
+    private final PuzzleActivity activity;
 
     public TouchListener(PuzzleActivity activity) {
         this.activity = activity;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         float x = motionEvent.getRawX();
