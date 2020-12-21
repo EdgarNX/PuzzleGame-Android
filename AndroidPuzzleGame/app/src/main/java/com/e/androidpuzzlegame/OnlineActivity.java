@@ -48,11 +48,10 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
             if (joinRoomEditText.getText().toString().matches("^[a-z0-9]*$") && joinRoomEditText.getText().toString().length() >= 4) {
                 joinRoomEditText.setError(null);
 
-//                TODO put intent to waiting room
+                // TODO database verification
 
-//                Intent intent = new Intent(this, SelectActivity.class);
-//                intent.putExtra("online", 1);
-//                startActivity(intent);
+                Intent intent = new Intent(this, WaitingRoomActivity.class);
+                startActivity(intent);
             } else {
                 joinRoomEditText.setError("The room name only contain letters/numbers and must > 3 characters!");
             }
