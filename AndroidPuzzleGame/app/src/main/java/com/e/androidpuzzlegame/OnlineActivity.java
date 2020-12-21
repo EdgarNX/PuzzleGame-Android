@@ -24,7 +24,6 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online);
-
         Bundle extras = getIntent().getExtras();
         nickname = extras.getString("currentNickname");
 
