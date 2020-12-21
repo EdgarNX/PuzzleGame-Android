@@ -3,9 +3,7 @@
     package="com.e.androidpuzzlegame"
     android:targetSandboxVersion="1">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    //for parse
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- //for parse -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -21,7 +19,6 @@
     <meta-data
         android:name="com.parse.CLIENT_KEY"
         android:value="oRHVHoC40X0c" />
-    //end parse
 
     <application
         android:name=".StarterApplication"
@@ -29,18 +26,21 @@
         android:icon="@drawable/ic_puzzle"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <service android:name=".SoundService"  android:enabled="true"/>
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".WaitingRoomActivity"></activity>
 
+        <service
+            android:name=".SoundService"
+            android:enabled="true" />
 
         <activity
             android:name=".OnlineActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SelectActivity"
-            android:screenOrientation="portrait"
-            android:label="Choose a photo"/>
+            android:label="Choose a photo"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PuzzleActivity"
             android:screenOrientation="portrait" />
@@ -49,11 +49,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".SettingsActivity"
-            android:screenOrientation="portrait"
-            android:label="Settings" />
-  
-        <activity android:name=".AfterSignInActivity"></activity>
-
+            android:label="Settings"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -73,7 +70,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
