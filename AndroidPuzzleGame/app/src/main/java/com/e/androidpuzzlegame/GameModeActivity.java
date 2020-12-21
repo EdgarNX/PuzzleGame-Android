@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GameModeActivity extends AppCompatActivity {
 
+    private String currentUsername = "";
+    private String currentNickname = "";
 
     protected void onCreate(Bundle savedInstanceState) {
         PlayBackgroundSound();
@@ -24,6 +26,12 @@ public class GameModeActivity extends AppCompatActivity {
 
         Button singlePlayer = findViewById(R.id.single_player);
         Button online = findViewById(R.id.online);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            currentUsername = bundle.getString(MainActivity.USERNAME_MESSAGE_KEY);
+            currentNickname = bundle.getString(MainActivity.NICKNAME_MESSAGE_KEY);
+        }
 
         singlePlayer.setOnClickListener(v -> startActivity(new Intent(GameModeActivity.this, SelectActivity.class)));
         online.setOnClickListener(v -> startActivity(new Intent(GameModeActivity.this, OnlineActivity.class)));
@@ -42,7 +50,13 @@ public class GameModeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+
+                Intent settingIntent = new Intent(this, SettingsActivity.class);
+
+                settingIntent.putExtra(MainActivity.USERNAME_MESSAGE_KEY, currentUsername);
+                settingIntent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentNickname);
+
+                startActivity(settingIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

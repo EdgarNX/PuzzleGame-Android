@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.sign_layout);
-
         if (ParseUser.getCurrentUser() != null) {
             Log.e("user", ParseUser.getCurrentUser().getUsername());
 
@@ -73,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
             getTheUserNickname();
         }
+
+        setContentView(R.layout.sign_layout);
 
         initialize();
 
@@ -177,9 +177,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 if (e == null && !objects.isEmpty()) {
                     if (!objects.get(0).getString("nickname").isEmpty()) {
 
-                        Log.e("FindInBackground", "Retrieved " + objects.get(0).getUsername());
+                        Log.e("FindInBackground", "Retrieved " + objects.get(0).get("nickname").toString());
 
-                        theCurrentUserNickname = objects.get(0).getUsername();
+                        theCurrentUserNickname = objects.get(0).get("nickname").toString();
 
                         Log.e("FindInBackground", "Retrieved " + theCurrentUserNickname);
 
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private void goToTheNextActivity(String username, String nickname) {
 
-        Intent afterSignIn = new Intent(MainActivity.this, AfterSignInActivity.class);
+        Intent afterSignIn = new Intent(MainActivity.this, GameModeActivity.class);
         String current_username = username;
         String current_nickname = nickname;
 

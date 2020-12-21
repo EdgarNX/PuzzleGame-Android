@@ -9,7 +9,6 @@
     <string name="background_music">Music</string>
     <string name="logout_text">Logout</string>
     <string name="change_nickname_text">Change nickname</string>
-    <string name="app_name">AndroidPuzzleGame</string>
     <string name="login">Sign In</string>
     <string name="signup">Sign Up</string>
     <string name="error_missing_message">Missing username or nickname.</string>
