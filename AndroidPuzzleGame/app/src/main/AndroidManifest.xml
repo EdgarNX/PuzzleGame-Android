@@ -5,7 +5,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    //for parse
+<!--    //for parse-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -21,7 +21,7 @@
     <meta-data
         android:name="com.parse.CLIENT_KEY"
         android:value="oRHVHoC40X0c" />
-    //end parse
+<!--    //end parse-->
 
     <application
         android:name=".StarterApplication"

@@ -34,7 +34,11 @@ public class GameModeActivity extends AppCompatActivity {
         }
 
         singlePlayer.setOnClickListener(v -> startActivity(new Intent(GameModeActivity.this, SelectActivity.class)));
-        online.setOnClickListener(v -> startActivity(new Intent(GameModeActivity.this, OnlineActivity.class)));
+        online.setOnClickListener(v -> {
+            Intent intentOnlineActivity = new Intent(GameModeActivity.this, OnlineActivity.class);
+            intentOnlineActivity.putExtra("currentNickname", currentNickname);
+            startActivity(intentOnlineActivity);
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -50,7 +54,6 @@ public class GameModeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-
                 Intent settingIntent = new Intent(this, SettingsActivity.class);
 
                 settingIntent.putExtra(MainActivity.USERNAME_MESSAGE_KEY, currentUsername);
@@ -69,29 +72,8 @@ public class GameModeActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    /*@Override
-    protected void onResume() {
-        //start service and play music
-        startService(new Intent(GameModeActivity.this, SoundService.class));
-        super.onResume();
-    }*/
-
-    /*@Override
-    protected void onStart() {
-        //start service and play music
-        startService(new Intent(GameModeActivity.this, SoundService.class));
-        super.onStart();
-    }*/
-
-    /*@Override
-    protected void onStop() {
-        //stop service and stop music
-        stopService(new Intent(GameModeActivity.this, SoundService.class));
-        super.onStop();
-    }*/
     @Override
     protected void onDestroy() {
-
         //stop service and stop music
         stopService(new Intent(this, SoundService.class));
         super.onDestroy();

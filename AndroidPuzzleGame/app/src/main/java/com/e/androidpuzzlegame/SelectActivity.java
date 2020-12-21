@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.parse.ParseFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -130,8 +132,17 @@ public class SelectActivity extends AppCompatActivity {
 
         MenuInflater inflater = getMenuInflater();
 
-        inflater.inflate(R.menu.photo_gallery_settings_menu, menu);
+        Bundle extras = getIntent().getExtras();
+        int online;
+        if(extras == null)
+            online = 0;
+        else
+            online = extras.getInt("online");
 
+        if(online == 0)
+            inflater.inflate(R.menu.photo_gallery_settings_menu, menu);
+        else
+            inflater.inflate(R.menu.photo_gallery_menu, menu);
         return true;
 
     }
