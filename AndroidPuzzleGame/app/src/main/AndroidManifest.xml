@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.e.androidpuzzlegame">
+    package="com.e.androidpuzzlegame"
+    android:targetSandboxVersion="1">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    //for parse
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <meta-data
+        android:name="com.parse.SERVER_URL"
+        android:value="http://52.15.55.212/parse/" />
+    <meta-data
+        android:name="com.parse.APPLICATION_ID"
+        android:value="myappID" />
+    <meta-data
+        android:name="com.parse.CLIENT_KEY"
+        android:value="oRHVHoC40X0c" />
+    //end parse
+
     <application
+        android:name=".StarterApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_puzzle"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
         <service android:name=".SoundService"  android:enabled="true"/>
 
@@ -31,6 +51,9 @@
             android:name=".SettingsActivity"
             android:screenOrientation="portrait"
             android:label="Settings" />
+  
+        <activity android:name=".AfterSignInActivity"></activity>
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -50,6 +73,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>
