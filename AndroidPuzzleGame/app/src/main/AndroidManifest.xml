@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.e.androidpuzzlegame"
+    android:targetSandboxVersion="1">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    //for parse
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <meta-data
+        android:name="com.parse.SERVER_URL"
+        android:value="http://52.15.55.212/parse/" />
+    <meta-data
+        android:name="com.parse.APPLICATION_ID"
+        android:value="myappID" />
+    <meta-data
+        android:name="com.parse.CLIENT_KEY"
+        android:value="oRHVHoC40X0c" />
+    //end parse
+
+    <application
+        android:name=".StarterApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_puzzle"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AndroidPuzzleGame"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".SelectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".PuzzleActivity"
+            android:screenOrientation="portrait" />
+        
+        <activity android:name=".AfterSignInActivity"></activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>
