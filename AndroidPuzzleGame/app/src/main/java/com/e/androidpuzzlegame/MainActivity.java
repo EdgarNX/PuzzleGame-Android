@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -145,6 +146,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public void onClick(View v) {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -258,9 +268,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
-                    toast = Toast.makeText(getApplicationContext(), "SignIn successfully", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+//                    toast = Toast.makeText(getApplicationContext(), "SignIn successfully", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER, 0, 0);
+//                    toast.show();
 
                     theCurrentUserUsername = usernameText.getText().toString();
 
@@ -337,9 +347,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    toast = Toast.makeText(getApplicationContext(), "SignUp successfully", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+//                    toast = Toast.makeText(getApplicationContext(), "SignUp successfully", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER, 0, 0);
+//                    toast.show();
 
                     goToTheNextActivity(usernameText.getText().toString(), nicknameText.getText().toString());
 

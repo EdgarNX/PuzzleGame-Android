@@ -25,14 +25,6 @@ public class StarterApplication extends Application {
                 .build()
         );
 
-        // Init Live Query Client
-        ParseLiveQueryClient parseLiveQueryClient = null;
-
-        try {
-            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://puzzlegame.b4a.io/"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
 
         ParseACL defaultACL = new ParseACL();
         defaultACL.setPublicReadAccess(true);
