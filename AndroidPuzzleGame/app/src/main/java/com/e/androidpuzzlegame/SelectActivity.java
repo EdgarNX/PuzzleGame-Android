@@ -184,4 +184,9 @@ public class SelectActivity extends AppCompatActivity {
         }
 
     }
+
+    // TODO pick the photo url and put it in this
+    // google on how to upload/retrieve images from Parse in android
+
+
 }

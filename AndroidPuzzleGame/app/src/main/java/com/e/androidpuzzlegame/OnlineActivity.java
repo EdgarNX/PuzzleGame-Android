@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,10 +17,27 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import java.util.List;
+
 public class OnlineActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String TABLE_MESSAGE_KEY = "currentTableName";
+    public static final String NICKNAME_MESSAGE_KEY = "currentNickname";
+
+
     private String nickname = "";
     private EditText createRoomEditText;
     private EditText joinRoomEditText;
+
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +54,25 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
         createButton.setOnClickListener(v -> {
             if (createRoomEditText.getText().toString().matches("^[a-z0-9]*$") && createRoomEditText.getText().toString().length() >= 4) {
                 createRoomEditText.setError(null);
-                Intent intent = new Intent(this, SelectActivity.class);
-                intent.putExtra("online", 1);
-                startActivity(intent);
+
+                ParseObject gameTable = new ParseObject("GameTable");
+                gameTable.put("name", createRoomEditText.getText().toString());
+                gameTable.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Log.i("SaveInBackgound", "Successful");
+
+                            Intent intent = new Intent(OnlineActivity.this, SelectActivity.class);
+                            intent.putExtra("online", 1);
+                            startActivity(intent);
+
+                        } else {
+                            Log.i("SaveInBackgound", "Failed. Error: " + e.toString());
+                        }
+                    }
+                });
+
             } else {
                 createRoomEditText.setError("The room name only contain letters/numbers and must > 3 characters!");
             }
@@ -48,10 +83,32 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
             if (joinRoomEditText.getText().toString().matches("^[a-z0-9]*$") && joinRoomEditText.getText().toString().length() >= 4) {
                 joinRoomEditText.setError(null);
 
-                // TODO database verification
+//                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+//                toast.setGravity(Gravity.CENTER, 0, 0);
+//                toast.show();
 
-                Intent intent = new Intent(this, WaitingRoomActivity.class);
-                startActivity(intent);
+                // TODO database verification
+                // todo done
+
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
+                query.whereEqualTo("name", joinRoomEditText.getText().toString());
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        if (e == null && !objects.isEmpty()) {
+
+                            Intent intent = new Intent(OnlineActivity.this, WaitingRoomActivity.class);
+                            intent.putExtra(TABLE_MESSAGE_KEY, joinRoomEditText.getText().toString());
+                            intent.putExtra(NICKNAME_MESSAGE_KEY, nickname);
+                            startActivity(intent);
+
+                        } else {
+                            toast = Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    }
+                });
             } else {
                 joinRoomEditText.setError("The room name only contain letters/numbers and must > 3 characters!");
             }

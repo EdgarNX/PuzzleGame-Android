@@ -9,23 +9,35 @@ import android.text.style.AlignmentSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 public class WaitingRoomActivity extends AppCompatActivity {
+
+    private TextView hostText;
+    private TextView pl1Text;
+    private TextView pl2Text;
+    private TextView pl3Text;
+
+    String currentTableName;
+    String currentNickname;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.waiting_room_layout);
 
 
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.waiting_room, menu);
         return true;
-
     }
 
     @Override
