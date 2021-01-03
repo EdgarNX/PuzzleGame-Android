@@ -34,9 +34,16 @@ public class GameModeActivity extends AppCompatActivity {
             currentNickname = bundle.getString(MainActivity.NICKNAME_MESSAGE_KEY);
         }
 
-        singlePlayer.setOnClickListener(v -> startActivity(new Intent(GameModeActivity.this, SelectActivity.class)));
+        singlePlayer.setOnClickListener(v -> {
+            Intent intentSinglePlayerActivity = new Intent(GameModeActivity.this, SelectActivity.class);
+            intentSinglePlayerActivity.putExtra("currentUsername", currentUsername);
+            intentSinglePlayerActivity.putExtra("currentNickname", currentNickname);
+            // intentSinglePlayerActivity.putExtra("online", false);
+            startActivity(intentSinglePlayerActivity);
+        });
         online.setOnClickListener(v -> {
             Intent intentOnlineActivity = new Intent(GameModeActivity.this, OnlineActivity.class);
+            intentOnlineActivity.putExtra("currentUsername", currentUsername);
             intentOnlineActivity.putExtra("currentNickname", currentNickname);
             startActivity(intentOnlineActivity);
         });

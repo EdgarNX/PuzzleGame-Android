@@ -22,12 +22,17 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.parse.ParseFile;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 
 public class SelectActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
@@ -36,11 +41,21 @@ public class SelectActivity extends AppCompatActivity {
     static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 3;
     static final int REQUEST_IMAGE_GALLERY = 4;
 
+    private String roomName = "";
+    private String nickname = "";
+    private boolean online = false;
+
     @SuppressLint("ShowToast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select);
+
+        Bundle extras = getIntent().getExtras();
+        assert extras != null;
+        roomName = extras.getString(OnlineActivity.TABLE_MESSAGE_KEY);
+        nickname = extras.getString(OnlineActivity.NICKNAME_MESSAGE_KEY);
+        online = extras.getBoolean(OnlineActivity.ONLINE_MESSAGE_KEY);
 
         AssetManager am = getAssets();
         try {
@@ -49,10 +64,20 @@ public class SelectActivity extends AppCompatActivity {
             GridView grid = findViewById(R.id.grid);
             grid.setAdapter(new ImageAdapter(this));
             grid.setOnItemClickListener((adapterView, view, i, l) -> {
-                Intent intent1 = new Intent(getApplicationContext(), PuzzleActivity.class);
-                assert files != null;
-                intent1.putExtra("assetName", files[i % files.length]);
-                startActivity(intent1);
+                if (!online) {
+                    Intent intent1 = new Intent(getApplicationContext(), PuzzleActivity.class);
+                    assert files != null;
+                    intent1.putExtra("assetName", files[i % files.length]);
+                    startActivity(intent1);
+                } else {
+                    Intent intent1 = new Intent(getApplicationContext(), WaitingRoomActivity.class);
+                    assert files != null;
+                    intent1.putExtra("assetName", files[i % files.length]);
+                    intent1.putExtra(OnlineActivity.TABLE_MESSAGE_KEY, roomName);
+                    intent1.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, nickname);
+                    uploadImage(files[i % files.length],"assetName");
+                    startActivity(intent1);
+                }
             });
         } catch (IOException e) {
             Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT);
@@ -113,38 +138,49 @@ public class SelectActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Intent intent = new Intent(this, PuzzleActivity.class);
-            intent.putExtra("mCurrentPhotoPath", mCurrentPhotoPath);
-            startActivity(intent);
-        }
-        if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
+        if (!online) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                Intent intent = new Intent(this, PuzzleActivity.class);
+                intent.putExtra("mCurrentPhotoPath", mCurrentPhotoPath);
+                startActivity(intent);
+            }
+            if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                Intent intent = new Intent(this, PuzzleActivity.class);
+                assert uri != null;
+                intent.putExtra("mCurrentPhotoUri", uri.toString());
+                startActivity(intent);
+            }
+        } else {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                Intent intent = new Intent(this, WaitingRoomActivity.class);
+                intent.putExtra(OnlineActivity.TABLE_MESSAGE_KEY, roomName);
+                intent.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, nickname);
 
-            Intent intent = new Intent(this, PuzzleActivity.class);
-            assert uri != null;
-            intent.putExtra("mCurrentPhotoUri", uri.toString());
-            startActivity(intent);
+                uploadImage(mCurrentPhotoPath, "mCurrentPhotoPath");
+
+                startActivity(intent);
+            }
+            if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                Intent intent = new Intent(this, WaitingRoomActivity.class);
+                assert uri != null;
+                intent.putExtra(OnlineActivity.TABLE_MESSAGE_KEY, roomName);
+                intent.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, nickname);
+
+                uploadImage(uri.toString(), "mCurrentPhotoUri");
+
+                startActivity(intent);
+            }
         }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater = getMenuInflater();
 
-        Bundle extras = getIntent().getExtras();
-        int online;
-        if(extras == null)
-            online = 0;
-        else
-            online = extras.getInt("online");
-
-        if(online == 0)
+        if (!online)
             inflater.inflate(R.menu.photo_gallery_settings_menu, menu);
-        else
-            inflater.inflate(R.menu.photo_gallery_menu, menu);
         return true;
-
     }
 
     @SuppressLint({"NonConstantResourceId", "ShowToast"})
@@ -182,11 +218,25 @@ public class SelectActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
+    public void uploadImage(String theImage, String theImageType) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
+        query.whereEqualTo("name", roomName); // the room name
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects != null) {
+
+                    objects.get(0).put("image", theImage);
+                    objects.get(0).put("imageType", theImageType);
+
+                    objects.get(0).saveInBackground();
+                }
+            }
+        });
+    }
     // TODO pick the photo url and put it in this
     // google on how to upload/retrieve images from Parse in android
-
-
 }

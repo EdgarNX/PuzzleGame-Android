@@ -62,10 +62,6 @@ public class PuzzleActivity extends AppCompatActivity implements FireMissilesDia
     String mCurrentPhotoUri;
     private static final String TAG = "PuzzleActivity";
 
-    /*private SensorManager sensorManager;
-    Sensor accelerometer;
-    private float x,y,z;*/
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +75,6 @@ public class PuzzleActivity extends AppCompatActivity implements FireMissilesDia
         final String assetName = intent.getStringExtra("assetName");
         mCurrentPhotoPath = intent.getStringExtra("mCurrentPhotoPath");
         mCurrentPhotoUri = intent.getStringExtra("mCurrentPhotoUri");
-
-        /*Log.d(TAG, "onCreate: Initializing Sensor Services");
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(PuzzleActivity.this,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
-        Log.d(TAG, "onCreate: Register accelerometer listener");*/
 
         // run image related code after the view was laid out
         // to have all dimensions calculated

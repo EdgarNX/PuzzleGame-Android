@@ -103,7 +103,8 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
                             object.saveInBackground();
 
-                            onBackPressed();
+
+
                         } else {
                             Log.e("error", "something went wrong");
                             Log.e("error message", e.getMessage());

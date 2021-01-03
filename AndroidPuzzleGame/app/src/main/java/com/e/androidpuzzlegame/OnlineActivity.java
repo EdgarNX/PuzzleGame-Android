@@ -32,6 +32,10 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
 
     public static final String TABLE_MESSAGE_KEY = "currentTableName";
     public static final String NICKNAME_MESSAGE_KEY = "currentNickname";
+    public static final String ONLINE_MESSAGE_KEY = "online";
+
+
+    private String username = "";
 
     private String nickname = "";
     private EditText createRoomEditText;
@@ -44,6 +48,7 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online);
         Bundle extras = getIntent().getExtras();
+        username = extras.getString("currentUsername");
         nickname = extras.getString("currentNickname");
 
         RelativeLayout activityOnline = findViewById(R.id.online_relative_layout);
@@ -155,7 +160,9 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                     Log.i("SaveInBackgound", "Successful");
 
                     Intent intent = new Intent(OnlineActivity.this, SelectActivity.class);
-                    intent.putExtra("online", 1);
+                    intent.putExtra(TABLE_MESSAGE_KEY, createRoomEditText.getText().toString());
+                    intent.putExtra(NICKNAME_MESSAGE_KEY, nickname);
+                    intent.putExtra(ONLINE_MESSAGE_KEY, true);
                     startActivity(intent);
 
                     joinRoomEditText.setText("");
