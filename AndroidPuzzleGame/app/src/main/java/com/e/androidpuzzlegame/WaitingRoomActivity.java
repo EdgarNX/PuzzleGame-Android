@@ -91,20 +91,19 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     public void done(ParseObject object, ParseException e) {
                         if (object != null) {
-                            if (!"Player1".equals(pl2Text.getText().toString())) {
+                            if ("Player1".equals(pl2Text.getText().toString())) {
                                 object.put("plTwoTime", "99999999");
                             }
-                            if (!"Player2".equals(pl3Text.getText().toString())) {
+                            if ("Player2".equals(pl3Text.getText().toString())) {
                                 object.put("plThreeTime", "99999999");
                             }
-                            if (!"Player3".equals(pl4Text.getText().toString())) {
+                            if ("Player3".equals(pl4Text.getText().toString())) {
                                 object.put("plFourTime", "99999999");
                             }
 
+                            object.put("triggerStart", "yes");
+
                             object.saveInBackground();
-
-
-
                         } else {
                             Log.e("error", "something went wrong");
                             Log.e("error message", e.getMessage());
@@ -162,6 +161,15 @@ public class WaitingRoomActivity extends AppCompatActivity {
                                     } else {
                                         pl4Text.setText(object.get("playerFour").toString());
                                     }
+                                }
+
+                                if (object.get("triggerStart").toString().equals("yes")) {
+                                    Intent intent1 = new Intent(getApplicationContext(), PuzzleActivity.class);
+                                    intent1.putExtra(ROOM_NAME_MESSAGE_KEY, currentTableName);
+                                    intent1.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, currentNickname);
+                                    intent1.putExtra(object.get("imageType").toString(), object.get("image").toString());
+                                    intent1.putExtra(OnlineActivity.ONLINE_MESSAGE_KEY, true);
+                                    startActivity(intent1);
                                 }
 
                                 verifyPlayButton();
@@ -259,7 +267,6 @@ public class WaitingRoomActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
     private void getDataFromDatabase() {
 

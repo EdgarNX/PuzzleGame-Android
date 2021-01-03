@@ -85,6 +85,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                 if (!currentPlayerName.equals(hostName)) {
                     Log.e("no", "host");
                     Intent intent = new Intent(LeaderboardActivity.this, GameModeActivity.class);
+                    intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentPlayerName);
                     startActivity(intent);
 
                 } else {
@@ -182,11 +183,11 @@ public class LeaderboardActivity extends AppCompatActivity {
 
                                 if (!object.get("triggerDestroy").toString().equals("no")) {
                                     Intent intent = new Intent(LeaderboardActivity.this, GameModeActivity.class);
+                                    intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentPlayerName);
                                     startActivity(intent);
                                 }
 
                                 verifyTheSituation();
-
                             }
 
                         }
