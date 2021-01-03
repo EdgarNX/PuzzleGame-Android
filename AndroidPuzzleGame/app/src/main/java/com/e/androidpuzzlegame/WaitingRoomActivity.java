@@ -2,6 +2,7 @@ package com.e.androidpuzzlegame;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,6 +33,8 @@ import java.util.List;
 
 public class WaitingRoomActivity extends AppCompatActivity {
 
+    public static final String ROOM_NAME_MESSAGE_KEY = "roomname";
+
     private TextView hostText;
     private TextView pl2Text;
     private TextView pl3Text;
@@ -39,8 +42,9 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
     private Button buttonStart;
     private Button buttonStop;
+    private Button buttonLeaderboard;
 
-    String currentTableName;
+    public String currentTableName;
     String currentNickname;
     Boolean doneSettingTheCurrentPlayer = false;
 
@@ -71,43 +75,123 @@ public class WaitingRoomActivity extends AppCompatActivity {
         getDataFromDatabase();
 
         backOrStop();
-//
-//        ParseLiveQueryClient parseLiveQueryClient = null;
-//
-//        try {
-//            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://puzzlegame.b4a.io/"));
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Message - Live Query
-//        if (parseLiveQueryClient != null) {
-//            ParseQuery<ParseObject> parseQuery = new ParseQuery("GameTable");
-//            parseQuery.whereEqualTo("name", "currentTableName");
-//            SubscriptionHandling<ParseObject> subscriptionHandling = parseLiveQueryClient.subscribe(parseQuery);
-//
-//
-//
-//            subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
-//                @Override
-//                public void onEvent(ParseQuery<ParseObject> query, ParseObject object) {
-//                    Handler handler = new Handler(Looper.getMainLooper());
-//                    handler.post(new Runnable() {
-//                        public void run() {
-//                            Log.e("let's see", object.get("playerTwo").toString());
-//                            Log.e("let's see", object.get("playerThree").toString());
-//                            Log.e("let's see", object.get("playerFour").toString());
-//                        }
-//
-//                    });
-//                }
-//            });
-//
-//
-//        }
+
+        theAliveQuery();
+
+        startButtonPressed();
 
     }
 
+    private void startButtonPressed() {
+        buttonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
+                query.whereEqualTo("name", currentTableName);
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    public void done(ParseObject object, ParseException e) {
+                        if (object != null) {
+                            if(!"Player1".equals(pl2Text.getText().toString())) {
+                                object.put("plTwoTime", "99999999");
+                            }
+                            if(!"Player2".equals(pl3Text.getText().toString())) {
+                                object.put("plThreeTime", "99999999");
+                            }
+                            if(!"Player3".equals(pl4Text.getText().toString())) {
+                                object.put("plFourTime", "99999999");
+                            }
+
+                            object.saveInBackground();
+
+                            onBackPressed();
+                        } else {
+                            Log.e("error", "something went wrong");
+                            Log.e("error message", e.getMessage());
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public void theAliveQuery() {
+        ParseLiveQueryClient parseLiveQueryClient = null;
+
+        SubscriptionHandling<ParseObject> subscriptionHandling;
+
+        try {
+            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://puzzlegame.b4a.io/"));
+
+            ParseQuery<ParseObject> liveQuery = new ParseQuery("GameTable");
+            liveQuery.whereEqualTo("name", currentTableName);
+
+            subscriptionHandling = parseLiveQueryClient.subscribe(liveQuery);
+
+            /**
+             * Handle the subscription, if any new UPDATE event occur
+             */
+            subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
+                @Override
+                public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        public void run() {
+
+                            if (object != null) {
+
+                                if(!object.get("playerTwo").toString().equals(pl2Text.getText().toString())) {
+                                    if(object.get("playerTwo").toString().equals("00")) {
+                                        pl2Text.setText("Player1");
+                                    } else {
+                                        pl2Text.setText(object.get("playerTwo").toString());
+                                    }
+                                }
+
+                                if(!object.get("playerThree").toString().equals(pl3Text.getText().toString())) {
+                                    if(object.get("playerThree").toString().equals("00")) {
+                                        pl3Text.setText("Player2");
+                                    } else {
+                                        pl3Text.setText(object.get("playerThree").toString());
+                                    }
+                                }
+
+                                if(!object.get("playerFour").toString().equals(pl4Text.getText().toString())) {
+                                    if(object.get("playerFour").toString().equals("00")) {
+                                        pl4Text.setText("Player3");
+                                    } else {
+                                        pl4Text.setText(object.get("playerFour").toString());
+                                    }
+                                }
+
+                                verifyPlayButton();
+
+                                if(!object.get("triggerDestroy").toString().equals("no")) {
+                                    onBackPressed();
+                                }
+
+                            }
+
+
+                        }
+                    });
+                }
+            });
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.e("error live query", e.getMessage().toString());
+        }
+    }
+
+    public void verifyPlayButton() {
+        if (currentNickname.equals(host)) {
+            if (!"Player1".equals(pl2Text.getText().toString()) || !"Player2".equals(pl3Text.getText().toString()) || !"Player3".equals(pl4Text.getText().toString())) {
+                buttonStart.setVisibility(View.VISIBLE);
+            } else {
+                buttonStart.setVisibility(View.GONE);
+            }
+        }
+    }
 
     public void backOrStop() {
 
@@ -116,12 +200,14 @@ public class WaitingRoomActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (!currentNickname.equals(host)) {
+
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
                     query.whereEqualTo("name", currentTableName);
                     query.getFirstInBackground(new GetCallback<ParseObject>() {
                         public void done(ParseObject object, ParseException e) {
                             if (object != null) {
                                 object.put(thePlaceOfTheCurrentPlayer, "00");
+                                object.put("available", "true");
                                 object.saveInBackground();
 
                                 onBackPressed();
@@ -131,12 +217,30 @@ public class WaitingRoomActivity extends AppCompatActivity {
                             }
                         }
                     });
+
                 } else {
+
                     //TODO implementation for this, when the host destroy the room
                     // this also will need to trigger the other users
-                    Log.e("no implementation", "yet");
-                }
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
+                    query.whereEqualTo("name", currentTableName);
+                    query.getFirstInBackground(new GetCallback<ParseObject>() {
+                        public void done(ParseObject object, ParseException e) {
+                            if (object != null) {
+                                object.put("triggerDestroy", "yes");
+                                object.saveInBackground();
 
+                                object.deleteInBackground();
+
+                                onBackPressed();
+                            } else {
+                                Log.e("error", "something went wrong");
+                                Log.e("error message", e.getMessage());
+                            }
+                        }
+                    });
+
+                }
             }
         });
     }
@@ -176,7 +280,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                         pl3Text.setText(playerThree);
                     }
 
-                    Log.e("players", host + playerTwo + playerThree + playerFour);
+                    Log.e("players", host + " " + playerTwo + " " + playerThree + " " + playerFour);
                     Log.e("found", "we good");
 
                     setPlayers();
@@ -189,7 +293,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     }
 
     private void setPlayers() {
-        Log.e("error message", currentNickname + " " + host);
+        Log.e("host & current player", currentNickname + " " + host);
 
         if (currentNickname.equals(host)) {
             hostText.setText(currentNickname);
@@ -258,6 +362,17 @@ public class WaitingRoomActivity extends AppCompatActivity {
         buttonStart.setVisibility(View.GONE);
 
         buttonStop = findViewById(R.id.buttonStop);
+
+        buttonLeaderboard = findViewById(R.id.buttonLeaderBoard);
+
+        buttonLeaderboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WaitingRoomActivity.this, LeaderboardActivity.class);
+                intent.putExtra(ROOM_NAME_MESSAGE_KEY, currentTableName);
+                startActivity(intent);
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,6 +392,12 @@ public class WaitingRoomActivity extends AppCompatActivity {
         item.setTitle(s);
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        backOrStop();
     }
 
 }

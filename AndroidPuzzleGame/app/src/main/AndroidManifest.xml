@@ -20,7 +20,6 @@
         android:name="com.parse.CLIENT_KEY"
         android:value="FFgIuXyN3RiMDt1RFoNT5WkmUan8N1b8JkjLhDfO" />
 
-
     <application
         android:name=".StarterApplication"
         android:allowBackup="true"
@@ -29,7 +28,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WaitingRoomActivity"></activity>
+        <activity android:name=".LeaderboardActivity"></activity>
+        <activity android:name=".WaitingRoomActivity" />
 
         <service
             android:name=".SoundService"

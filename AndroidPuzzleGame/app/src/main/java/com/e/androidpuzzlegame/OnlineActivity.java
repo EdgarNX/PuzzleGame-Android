@@ -62,6 +62,13 @@ public class OnlineActivity extends AppCompatActivity implements View.OnClickLis
                 gameTable.put("playerTwo", "00");
                 gameTable.put("playerThree", "00");
                 gameTable.put("playerFour", "00");
+                gameTable.put("triggerDestroy", "no");
+                gameTable.put("triggerStop", "no");
+                gameTable.put("triggerStart", "no");
+                gameTable.put("plOneTime", "no");
+                gameTable.put("plTwoTime", "no");
+                gameTable.put("plThreeTime", "no");
+                gameTable.put("plFourTime", "no");
                 gameTable.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
