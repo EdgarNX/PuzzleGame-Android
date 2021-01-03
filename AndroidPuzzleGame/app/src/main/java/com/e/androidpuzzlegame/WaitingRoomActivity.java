@@ -91,19 +91,20 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     public void done(ParseObject object, ParseException e) {
                         if (object != null) {
-                            if(!"Player1".equals(pl2Text.getText().toString())) {
+                            if (!"Player1".equals(pl2Text.getText().toString())) {
                                 object.put("plTwoTime", "99999999");
                             }
-                            if(!"Player2".equals(pl3Text.getText().toString())) {
+                            if (!"Player2".equals(pl3Text.getText().toString())) {
                                 object.put("plThreeTime", "99999999");
                             }
-                            if(!"Player3".equals(pl4Text.getText().toString())) {
+                            if (!"Player3".equals(pl4Text.getText().toString())) {
                                 object.put("plFourTime", "99999999");
                             }
 
                             object.saveInBackground();
 
-                            onBackPressed();
+
+
                         } else {
                             Log.e("error", "something went wrong");
                             Log.e("error message", e.getMessage());
@@ -139,24 +140,24 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
                             if (object != null) {
 
-                                if(!object.get("playerTwo").toString().equals(pl2Text.getText().toString())) {
-                                    if(object.get("playerTwo").toString().equals("00")) {
+                                if (!object.get("playerTwo").toString().equals(pl2Text.getText().toString())) {
+                                    if (object.get("playerTwo").toString().equals("00")) {
                                         pl2Text.setText("Player1");
                                     } else {
                                         pl2Text.setText(object.get("playerTwo").toString());
                                     }
                                 }
 
-                                if(!object.get("playerThree").toString().equals(pl3Text.getText().toString())) {
-                                    if(object.get("playerThree").toString().equals("00")) {
+                                if (!object.get("playerThree").toString().equals(pl3Text.getText().toString())) {
+                                    if (object.get("playerThree").toString().equals("00")) {
                                         pl3Text.setText("Player2");
                                     } else {
                                         pl3Text.setText(object.get("playerThree").toString());
                                     }
                                 }
 
-                                if(!object.get("playerFour").toString().equals(pl4Text.getText().toString())) {
-                                    if(object.get("playerFour").toString().equals("00")) {
+                                if (!object.get("playerFour").toString().equals(pl4Text.getText().toString())) {
+                                    if (object.get("playerFour").toString().equals("00")) {
                                         pl4Text.setText("Player3");
                                     } else {
                                         pl4Text.setText(object.get("playerFour").toString());
@@ -165,7 +166,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
                                 verifyPlayButton();
 
-                                if(!object.get("triggerDestroy").toString().equals("no")) {
+                                if (!object.get("triggerDestroy").toString().equals("no")) {
                                     onBackPressed();
                                 }
 
