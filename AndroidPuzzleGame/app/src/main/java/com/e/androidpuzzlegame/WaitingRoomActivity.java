@@ -371,6 +371,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(WaitingRoomActivity.this, LeaderboardActivity.class);
                 intent.putExtra(ROOM_NAME_MESSAGE_KEY, currentTableName);
+                intent.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, currentNickname);
                 startActivity(intent);
             }
         });

@@ -15,7 +15,7 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/textSign"
+        android:id="@+id/textLeaderboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -134,7 +134,7 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonStop"
+        android:id="@+id/buttonBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
