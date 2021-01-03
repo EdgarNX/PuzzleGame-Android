@@ -36,7 +36,6 @@ public class SettingsActivity  extends AppCompatActivity {
             }else{
                 stopService(new Intent(this, SoundService.class));
 
-
                 Toast.makeText(this,"dezapasat",Toast.LENGTH_SHORT).show();
             }
         });
@@ -56,7 +55,7 @@ public class SettingsActivity  extends AppCompatActivity {
         }
 
         String logoutText = "Logout ";
-        logoutText += currentNickname + " " + currentUsername;
+        logoutText += currentNickname;
         logoutTextView.setText(logoutText);
         
         logoutButton.setOnClickListener(v -> {
