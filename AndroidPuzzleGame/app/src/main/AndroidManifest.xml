@@ -12,14 +12,13 @@
 
     <meta-data
         android:name="com.parse.SERVER_URL"
-        android:value="http://52.15.55.212/parse/" />
+        android:value="https://parseapi.back4app.com" />
     <meta-data
         android:name="com.parse.APPLICATION_ID"
-        android:value="myappID" />
+        android:value="rXppaOOXgQ0sN0ZmNqRZpJiqjBJGVpEqPFibq6IR" />
     <meta-data
         android:name="com.parse.CLIENT_KEY"
-        android:value="oRHVHoC40X0c" />
-
+        android:value="FFgIuXyN3RiMDt1RFoNT5WkmUan8N1b8JkjLhDfO" />
 
     <application
         android:name=".StarterApplication"
@@ -29,7 +28,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WaitingRoomActivity"></activity>
+        <activity android:name=".LeaderboardActivity"></activity>
+        <activity android:name=".WaitingRoomActivity" />
 
         <service
             android:name=".SoundService"

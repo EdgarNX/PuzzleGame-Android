@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.text.BreakIterator;
 import java.util.List;
 
 
@@ -44,14 +48,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private Button buttonSign;
     private RelativeLayout nicknameInput;
     private RelativeLayout confirmPasswordInput;
+    private RelativeLayout usernameField;
+    private RelativeLayout passwordField;
     private EditText usernameText;
     private EditText nicknameText;
     private EditText passwordText;
     private EditText confirmPasswordText;
     private LinearLayout signLayout;
     private ImageView logo;
+    private ProgressBar progressBar;
 
     Toast toast;
+    BreakIterator mTextField;
 
     private boolean signup = false;
     private String theCurrentUserNickname = "default";
@@ -76,24 +84,45 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         initialize();
 
+        waitAndProcess();
+
         checkTheLayoutWhatToShow();
 
         sign();
 
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }
+    private void waitAndProcess() {
 
-    private void waitAndGo() {
+        new CountDownTimer(3000, 1000) {
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            Log.e("Error Message: ", e.getMessage());
-        }
+            public void onTick(long millisUntilFinished) {
+                usernameField.setVisibility(View.GONE);
+                passwordField.setVisibility(View.GONE);
+                textSign.setVisibility(View.GONE);
+                buttonSign.setVisibility(View.GONE);
+                switchSign.setVisibility(View.GONE);
 
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            public void onFinish() {
+                usernameField.setVisibility(View.VISIBLE);
+                passwordField.setVisibility(View.VISIBLE);
+                textSign.setVisibility(View.VISIBLE);
+                buttonSign.setVisibility(View.VISIBLE);
+                switchSign.setVisibility(View.VISIBLE);
+
+                progressBar.setVisibility(View.GONE);
+            }
+
+        }.start();
     }
 
     private void initialize() {
+        usernameField = findViewById(R.id.usernameField);
+        passwordField = findViewById(R.id.passwordField);
+
         switchSign = findViewById(R.id.switchSign);
         textSign = findViewById(R.id.textSign);
         buttonSign = findViewById(R.id.buttonSign);
@@ -112,6 +141,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         logo = findViewById(R.id.puzzle_logo);
 
         logo.setOnClickListener(this);
+
+        progressBar = findViewById(R.id.progressBar_cyclic);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -228,9 +268,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
-                    toast = Toast.makeText(getApplicationContext(), "SignIn successfully", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+//                    toast = Toast.makeText(getApplicationContext(), "SignIn successfully", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER, 0, 0);
+//                    toast.show();
 
                     theCurrentUserUsername = usernameText.getText().toString();
 
@@ -307,9 +347,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    toast = Toast.makeText(getApplicationContext(), "SignUp successfully", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+//                    toast = Toast.makeText(getApplicationContext(), "SignUp successfully", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER, 0, 0);
+//                    toast.show();
 
                     goToTheNextActivity(usernameText.getText().toString(), nicknameText.getText().toString());
 
