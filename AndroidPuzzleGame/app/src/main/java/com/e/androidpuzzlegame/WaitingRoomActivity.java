@@ -57,6 +57,8 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
     Toast toast;
 
+    private Boolean doneHere;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,8 @@ public class WaitingRoomActivity extends AppCompatActivity {
             currentNickname = bundle.getString(OnlineActivity.NICKNAME_MESSAGE_KEY);
         }
 
+        doneHere = false;
+
         initialize();
 
         getDataFromDatabase();
@@ -79,7 +83,6 @@ public class WaitingRoomActivity extends AppCompatActivity {
         theAliveQuery();
 
         startButtonPressed();
-
     }
 
     private void startButtonPressed() {
@@ -130,6 +133,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
             /**
              * Handle the subscription, if any new UPDATE event occur
              */
+            ParseLiveQueryClient finalParseLiveQueryClient = parseLiveQueryClient;
             subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
                 @Override
                 public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
@@ -137,7 +141,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         public void run() {
 
-                            if (object != null) {
+                            if (object != null  && !doneHere) {
 
                                 if (!object.get("playerTwo").toString().equals(pl2Text.getText().toString())) {
                                     if (object.get("playerTwo").toString().equals("00")) {
@@ -164,6 +168,8 @@ public class WaitingRoomActivity extends AppCompatActivity {
                                 }
 
                                 if (object.get("triggerStart").toString().equals("yes")) {
+                                    doneHere = true;
+                                    finalParseLiveQueryClient.unsubscribe(liveQuery);
                                     Intent intent1 = new Intent(getApplicationContext(), PuzzleActivity.class);
                                     intent1.putExtra(ROOM_NAME_MESSAGE_KEY, currentTableName);
                                     intent1.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, currentNickname);
@@ -177,10 +183,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                                 if (!object.get("triggerDestroy").toString().equals("no")) {
                                     onBackPressed();
                                 }
-
                             }
-
-
                         }
                     });
                 }
@@ -241,7 +244,9 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
                                 object.deleteInBackground();
 
-                                onBackPressed();
+                                Intent intent = new Intent(WaitingRoomActivity.this, GameModeActivity.class);
+                                intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentNickname);
+                                startActivity(intent);
                             } else {
                                 Log.e("error", "something went wrong");
                                 Log.e("error message", e.getMessage());
@@ -372,16 +377,6 @@ public class WaitingRoomActivity extends AppCompatActivity {
         buttonStop = findViewById(R.id.buttonStop);
 
         buttonLeaderboard = findViewById(R.id.buttonLeaderBoard);
-
-        buttonLeaderboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WaitingRoomActivity.this, LeaderboardActivity.class);
-                intent.putExtra(ROOM_NAME_MESSAGE_KEY, currentTableName);
-                intent.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, currentNickname);
-                startActivity(intent);
-            }
-        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

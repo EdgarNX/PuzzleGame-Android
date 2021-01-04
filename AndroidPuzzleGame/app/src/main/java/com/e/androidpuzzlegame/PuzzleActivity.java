@@ -70,6 +70,8 @@ public class PuzzleActivity extends AppCompatActivity implements FireMissilesDia
     boolean isOnline;
     String currentTableName;
     String currentNickname;
+
+    long timeStart;
     private static final String TAG = "PuzzleActivity";
 
     @SuppressLint("ClickableViewAccessibility")
@@ -89,6 +91,10 @@ public class PuzzleActivity extends AppCompatActivity implements FireMissilesDia
 
         currentTableName = intent.getStringExtra(WaitingRoomActivity.ROOM_NAME_MESSAGE_KEY);
         currentNickname = intent.getStringExtra(OnlineActivity.NICKNAME_MESSAGE_KEY);
+
+        if (isOnline) {
+            timeStart = System.currentTimeMillis();
+        }
 
 
         // run image related code after the view was laid out
@@ -329,8 +335,14 @@ public class PuzzleActivity extends AppCompatActivity implements FireMissilesDia
 
     public void checkGameOver() {
         if (isGameOver()) {
+            //if (true) {
             finish();
-            if(isOnline) {
+            if (isOnline) {
+
+                long tEnd = System.currentTimeMillis();
+                long tDelta = tEnd - timeStart;
+                double elapsedSeconds = tDelta / 1000.0;
+                String seconds = String.valueOf(elapsedSeconds);
 
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
                 query.whereEqualTo("name", currentTableName);
@@ -340,30 +352,32 @@ public class PuzzleActivity extends AppCompatActivity implements FireMissilesDia
                     public void done(List<ParseObject> objects, ParseException e) {
                         if (e == null && objects != null) {
 
-                            if(objects.get(0).get("host").toString().equals(currentNickname)) {
-                                objects.get(0).put("plOneTime", "11");
+                            if (objects.get(0).get("host").toString().equals(currentNickname)) {
+                                objects.get(0).put("plOneTime", seconds);
                             }
 
-                            if(objects.get(0).get("playerTwo").toString().equals(currentNickname)) {
-                                objects.get(0).put("plOneTime", "22");
+                            if (objects.get(0).get("playerTwo").toString().equals(currentNickname)) {
+                                objects.get(0).put("plTwoTime", seconds);
                             }
 
-                            if(objects.get(0).get("playerThree").toString().equals(currentNickname)) {
-                                objects.get(0).put("plOneTime", "33");
+                            if (objects.get(0).get("playerThree").toString().equals(currentNickname)) {
+                                objects.get(0).put("plThreeTime", seconds);
                             }
-                            if(objects.get(0).get("playerFour").toString().equals(currentNickname)) {
-                                objects.get(0).put("plOneTime", "44");
+
+                            if (objects.get(0).get("playerFour").toString().equals(currentNickname)) {
+                                objects.get(0).put("plFourTime", seconds);
                             }
 
                             objects.get(0).saveInBackground();
+
+                            Intent intent = new Intent(PuzzleActivity.this, LeaderboardActivity.class);
+                            intent.putExtra(WaitingRoomActivity.ROOM_NAME_MESSAGE_KEY, currentTableName);
+                            intent.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, currentNickname);
+                            startActivity(intent);
                         }
                     }
                 });
 
-                Intent intent = new Intent(this, LeaderboardActivity.class);
-                intent.putExtra(WaitingRoomActivity.ROOM_NAME_MESSAGE_KEY, currentTableName);
-                intent.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, currentNickname);
-                startActivity(intent);
             }
         }
     }
