@@ -32,11 +32,11 @@ public class SettingsActivity  extends AppCompatActivity {
                 //start service and play music
                 startService(new Intent(this, SoundService.class));
 
-                Toast.makeText(this,"apasat",Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this,"apasat",Toast.LENGTH_SHORT).show();
             }else{
                 stopService(new Intent(this, SoundService.class));
 
-                Toast.makeText(this,"dezapasat",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"dezapasat",Toast.LENGTH_SHORT).show();
             }
         });
 

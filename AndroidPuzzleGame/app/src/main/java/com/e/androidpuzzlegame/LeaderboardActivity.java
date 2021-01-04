@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -55,6 +56,9 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     private double[] playersTimes = new double[5];
 
+    private Boolean doneHere;
+    private Boolean everybodyDone = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +71,59 @@ public class LeaderboardActivity extends AppCompatActivity {
             currentPlayerName = bundle.getString(OnlineActivity.NICKNAME_MESSAGE_KEY);
         }
 
+        doneHere = false;
+
         initialize();
 
         backOrStop();
 
+        extractDatas();
+
         verifyTheSituation();
 
         theAliveQuery();
+
+    }
+
+    private void extractDatas() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
+        query.whereEqualTo("name", currentTableName);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (object != null) {
+
+                    if (!object.get("plOneTime").toString().equals("no")) {
+                        playersTimes[1] = Double.parseDouble(object.get("plOneTime").toString());
+                        pl1Time = Double.parseDouble(object.get("plOneTime").toString());
+                        pl1Name = object.get("host").toString();
+                    }
+
+                    if (!object.get("plTwoTime").toString().equals("no")) {
+                        playersTimes[2] = Double.parseDouble(object.get("plTwoTime").toString());
+                        pl2Time = Double.parseDouble(object.get("plTwoTime").toString());
+                        pl2Name = object.get("playerTwo").toString();
+                    }
+
+                    if (!object.get("plThreeTime").toString().equals("no")) {
+                        playersTimes[3] = Double.parseDouble(object.get("plThreeTime").toString());
+                        pl3Time = Double.parseDouble(object.get("plThreeTime").toString());
+                        pl3Name = object.get("playerThree").toString();
+                    }
+
+                    if (!object.get("plFourTime").toString().equals("no")) {
+                        playersTimes[4] = Double.parseDouble(object.get("plFourTime").toString());
+                        pl4Time = Double.parseDouble(object.get("plFourTime").toString());
+                        pl4Name = object.get("playerFour").toString();
+                    }
+
+                    verifyEverybody();
+
+                } else {
+                    Log.e("error", "something went wrong");
+                    Log.e("error message", e.getMessage());
+                }
+            }
+        });
     }
 
     private void backOrStop() {
@@ -85,8 +135,10 @@ public class LeaderboardActivity extends AppCompatActivity {
                 if (!currentPlayerName.equals(hostName)) {
                     Log.e("no", "host");
                     Intent intent = new Intent(LeaderboardActivity.this, GameModeActivity.class);
+                    intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentPlayerName);
                     startActivity(intent);
 
+                    doneHere = true;
                 } else {
                     Log.e("yes", "host");
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
@@ -145,6 +197,7 @@ public class LeaderboardActivity extends AppCompatActivity {
             /**
              * Handle the subscription, if any new UPDATE event occur
              */
+            ParseLiveQueryClient finalParseLiveQueryClient = parseLiveQueryClient;
             subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<ParseObject>() {
                 @Override
                 public void onEvent(ParseQuery<ParseObject> query, final ParseObject object) {
@@ -152,7 +205,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         public void run() {
 
-                            if (object != null) {
+                            if (object != null && !doneHere) {
 
                                 hostName = object.get("host").toString();
 
@@ -181,14 +234,17 @@ public class LeaderboardActivity extends AppCompatActivity {
                                 }
 
                                 if (!object.get("triggerDestroy").toString().equals("no")) {
+                                    finalParseLiveQueryClient.unsubscribe(liveQuery);
+                                    doneHere = true;
                                     Intent intent = new Intent(LeaderboardActivity.this, GameModeActivity.class);
+                                    intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentPlayerName);
                                     startActivity(intent);
                                 }
 
-                                verifyTheSituation();
-
+                                if (!everybodyDone) {
+                                    verifyTheSituation();
+                                }
                             }
-
                         }
                     });
                 }
@@ -200,8 +256,50 @@ public class LeaderboardActivity extends AppCompatActivity {
         }
     }
 
+    public void verifyEverybody() {
+        if (pl1Time == 0 && pl2Time != 0 && pl3Time != 0 && pl4Time != 0) {
+            while (pl1Time != 0 && pl2Time != 0 && pl3Time != 0 && pl4Time != 0) {
+                extractDatas();
+            }
+        }
+        if (pl1Time != 0 && pl2Time == 0 && pl3Time != 0 && pl4Time != 0) {
+            while (pl1Time != 0 && pl2Time != 0 && pl3Time != 0 && pl4Time != 0) {
+                extractDatas();
+            }
+        }
+        if (pl1Time != 0 && pl2Time != 0 && pl3Time == 0 && pl4Time != 0) {
+            while (pl1Time != 0 && pl2Time != 0 && pl3Time != 0 && pl4Time != 0) {
+                extractDatas();
+            }
+        }
+        if (pl1Time != 0 && pl2Time != 0 && pl3Time != 0 && pl4Time == 0) {
+            while (pl1Time != 0 && pl2Time != 0 && pl3Time != 0 && pl4Time != 0) {
+                extractDatas();
+            }
+        }
+        verifyTheSituation();
+    }
+
     public void verifyTheSituation() {
         if (pl1Time != 0 && pl2Time != 0 && pl3Time != 0 && pl4Time != 0) {
+            everybodyDone = true;
+
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("GameTable");
+            query.whereEqualTo("name", currentTableName);
+            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                public void done(ParseObject object, ParseException e) {
+                    if (object != null) {
+
+                        object.put("triggerStop", "yes");
+                        object.saveInBackground();
+
+                    } else {
+                        Log.e("error", "something went wrong");
+                        Log.e("error message", e.getMessage());
+                    }
+                }
+            });
+
             progressBar.setVisibility(View.GONE);
 
             linearLayout1.setVisibility(View.VISIBLE);
