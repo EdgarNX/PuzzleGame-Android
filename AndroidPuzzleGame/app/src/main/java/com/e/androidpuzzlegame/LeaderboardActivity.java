@@ -38,7 +38,6 @@ public class LeaderboardActivity extends AppCompatActivity {
     private TextView textLeaderboard;
     private Button buttonBack;
 
-
     public String currentTableName;
     public String currentPlayerName;
     public String hostName;
@@ -136,6 +135,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                     Log.e("no", "host");
                     Intent intent = new Intent(LeaderboardActivity.this, GameModeActivity.class);
                     intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentPlayerName);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
 
                     doneHere = true;
@@ -238,9 +238,9 @@ public class LeaderboardActivity extends AppCompatActivity {
                                     doneHere = true;
                                     Intent intent = new Intent(LeaderboardActivity.this, GameModeActivity.class);
                                     intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentPlayerName);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                     startActivity(intent);
                                 }
-
                                 if (!everybodyDone) {
                                     verifyTheSituation();
                                 }
