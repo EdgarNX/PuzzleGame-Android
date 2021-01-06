@@ -175,6 +175,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                                     intent1.putExtra(OnlineActivity.NICKNAME_MESSAGE_KEY, currentNickname);
                                     intent1.putExtra(object.get("imageType").toString(), object.get("image").toString());
                                     intent1.putExtra(OnlineActivity.ONLINE_MESSAGE_KEY, true);
+                                    intent1.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                     startActivity(intent1);
                                 }
 
@@ -246,6 +247,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
                                 Intent intent = new Intent(WaitingRoomActivity.this, GameModeActivity.class);
                                 intent.putExtra(MainActivity.NICKNAME_MESSAGE_KEY, currentNickname);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                 startActivity(intent);
                             } else {
                                 Log.e("error", "something went wrong");
